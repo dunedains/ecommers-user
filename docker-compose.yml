@@ -6,7 +6,7 @@ services:
       ORACLE_PWD: oracle123
       ORACLE_CHARACTERSET: AL32UTF8
     ports:
-      - "1521:1521"
+      - "1525:1521"
     volumes:
       - oracle-data:/opt/oracle/oradata
       - ./init-db:/opt/oracle/scripts/setup

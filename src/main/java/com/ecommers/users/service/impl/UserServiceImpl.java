@@ -20,16 +20,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto.UserResponse getUserById(Long id) {
-        return repository.findById(id)
-                .map(this::toResponse)
-                .orElseThrow(() -> new UserNotFoundException(id));
+        return toResponse(findOrThrow(id));
     }
 
     @Override
     public List<UserDto.UserResponse> getAllUsers() {
-        return repository.findAll().stream()
-                .map(this::toResponse)
-                .toList();
+        return repository.findAll().stream().map(this::toResponse).toList();
     }
 
     @Override
@@ -38,31 +34,32 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setName(request.name());
         user.setEmail(request.email());
-        user.setDireccion(request.direccion());
+        user.setAddress(request.address());
         return toResponse(repository.save(user));
     }
 
     @Override
     @Transactional
     public UserDto.UserResponse updateUser(Long id, UserDto.UserRequest request) {
-        User user = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+        User user = findOrThrow(id);
         user.setName(request.name());
         user.setEmail(request.email());
-        user.setDireccion(request.direccion());
+        user.setAddress(request.address());
         return toResponse(repository.save(user));
     }
 
     @Override
     @Transactional
     public void deleteUser(Long id) {
-        if (!repository.existsById(id)) {
-            throw new UserNotFoundException(id);
-        }
+        if (!repository.existsById(id)) throw new UserNotFoundException(id);
         repository.deleteById(id);
     }
 
-    private UserDto.UserResponse toResponse(User user) {
-        return new UserDto.UserResponse(user.getId(), user.getName(), user.getEmail(), user.getDireccion());
+    private User findOrThrow(Long id) {
+        return repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    private UserDto.UserResponse toResponse(User u) {
+        return new UserDto.UserResponse(u.getId(), u.getName(), u.getEmail(), u.getAddress());
     }
 }

@@ -5,11 +5,11 @@ import lombok.*;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,5 +21,5 @@ public class User {
     private String email;
 
     @Column(nullable = false, length = 500)
-    private String direccion;
+    private String address;
 }
