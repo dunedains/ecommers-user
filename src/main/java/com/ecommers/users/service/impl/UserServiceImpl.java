@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(request.email());
         user.setAddress(request.address());
         user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole(normalizeRole(request.role()));
         return toResponse(repository.save(user));
     }
 
@@ -56,6 +57,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(request.email());
         user.setAddress(request.address());
         user.setPassword(passwordEncoder.encode(request.password()));
+        user.setRole(normalizeRole(request.role()));
         return toResponse(repository.save(user));
     }
 
@@ -82,7 +84,15 @@ public class UserServiceImpl implements UserService {
         return repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
+    /** Solo se aceptan los roles USER y ADMIN; por defecto USER. */
+    private String normalizeRole(String role) {
+        if (role != null && role.equalsIgnoreCase("ADMIN")) {
+            return "ADMIN";
+        }
+        return "USER";
+    }
+
     private UserDto.UserResponse toResponse(User u) {
-        return new UserDto.UserResponse(u.getId(), u.getName(), u.getEmail(), u.getAddress());
+        return new UserDto.UserResponse(u.getId(), u.getName(), u.getEmail(), u.getAddress(), u.getRole());
     }
 }
