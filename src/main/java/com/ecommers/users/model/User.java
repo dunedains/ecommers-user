@@ -22,4 +22,7 @@ public class User {
 
     @Column(nullable = false, length = 500)
     private String address;
+
+    @Column(length = 255)
+    private String password;
 }

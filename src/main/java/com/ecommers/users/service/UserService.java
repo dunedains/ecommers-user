@@ -10,4 +10,5 @@ public interface UserService {
     UserDto.UserResponse createUser(UserDto.UserRequest request);
     UserDto.UserResponse updateUser(Long id, UserDto.UserRequest request);
     void deleteUser(Long id);
+    UserDto.UserResponse validateCredentials(UserDto.LoginRequest request);
 }
